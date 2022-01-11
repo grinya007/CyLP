@@ -2136,24 +2136,40 @@ cdef class CyClpSimplex:
                                         tryPlusMinusOne=False):
         return self.CppSelf.loadProblem(modelObject.CppSelf, tryPlusMinusOne)
 
-    def loadProblem(self, CyCoinPackedMatrix matrix,
-                 np.ndarray[np.double_t, ndim=1] collb,
-                 np.ndarray[np.double_t, ndim=1] colub,
-                 np.ndarray[np.double_t, ndim=1] obj,
-                 np.ndarray[np.double_t, ndim=1] rowlb,
-                 np.ndarray[np.double_t, ndim=1] rowub,
-                 np.ndarray[np.double_t, ndim=1] rowObjective=np.array([])):
+    def loadProblem(
+        self,
+        numcols,
+        numrows,
+        np.ndarray[np.int32_t, ndim=1] start,
+        np.ndarray[np.int32_t, ndim=1] index,
+        np.ndarray[np.double_t, ndim=1] value,
+        np.ndarray[np.double_t, ndim=1] collb,
+        np.ndarray[np.double_t, ndim=1] colub,
+        np.ndarray[np.double_t, ndim=1] obj,
+        np.ndarray[np.double_t, ndim=1] rowlb,
+        np.ndarray[np.double_t, ndim=1] rowub,
+        np.ndarray[np.double_t, ndim=1] rowObjective=np.array([]),
+    ):
         cdef double* rd
         if len(rowObjective) == 0:
             rd = NULL
         else:
             rd = <double*> rowObjective.data
-        self.CppSelf.loadProblem(matrix.CppSelf, <double*> collb.data,
-                                         <double*> colub.data,
-                                         <double*> obj.data,
-                                         <double*> rowlb.data,
-                                         <double*> rowub.data,
-                                         <double*> rd)
+
+        self.CppSelf.loadProblem(
+            <int> numcols,
+            <int> numrows,
+            <int*> start.data,
+            <int*> index.data,
+            <double*> value.data,
+            <double*> collb.data,
+            <double*> colub.data,
+            <double*> obj.data,
+            <double*> rowlb.data,
+            <double*> rowub.data,
+            <double*> rd,
+        )
+
 
     def getCoinInfinity(self):
         return self.CppSelf.getCoinInfinity()

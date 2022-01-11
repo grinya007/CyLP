@@ -212,7 +212,8 @@ cdef extern from "IClpSimplex.hpp":
                               bint doRowObjective)
 
         int loadProblem(CppCoinModel * modelObject, int tryPlusMinusOne)
-        void loadProblem(CppCoinPackedMatrix* matrix,
+        void loadProblem(int numcols, int numrows,
+                          int* start, int* index, double* value,
 		                  double* collb,  double* colub,
 		                  double* obj,
 		                  double* rowlb,  double* rowub,
